@@ -1,12 +1,16 @@
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
+import { setApiBaseUrl } from '../services/api'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 function SettingsPage() {
-  const [apiBase, setApiBase] = useState(import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1')
+  const [apiBase, setApiBase] = useLocalStorage('apiBaseUrl', import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1')
   const [message, setMessage] = useState('')
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setMessage('Settings are currently stored in environment variables and require a page reload after editing.')
+    setApiBase(apiBase)
+    setApiBaseUrl(apiBase)
+    setMessage('Backend URL saved. The app will use this value immediately. Reload if a page still shows the old backend.')
   }
 
   return (

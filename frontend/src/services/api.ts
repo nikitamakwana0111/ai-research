@@ -1,9 +1,40 @@
 import axios from 'axios'
 
+const STORAGE_KEY = 'apiBaseUrl'
+
+function getSavedApiBaseUrl(): string | null {
+  if (typeof window === 'undefined') return null
+  try {
+    return window.localStorage.getItem(STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+
+function getDefaultApiBaseUrl(): string {
+  return import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1'
+}
+
+export function getApiBaseUrl(): string {
+  return getSavedApiBaseUrl() || getDefaultApiBaseUrl()
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1',
+  baseURL: getApiBaseUrl(),
   timeout: 30000,
 })
+
+export function setApiBaseUrl(baseURL: string) {
+  api.defaults.baseURL = baseURL
+
+  if (typeof window === 'undefined') return
+
+  try {
+    window.localStorage.setItem(STORAGE_KEY, baseURL)
+  } catch {
+    // ignore storage write errors
+  }
+}
 
 export const researchStart = (payload: { topic: string; enable_web_search: boolean; include_documents: boolean }) =>
   api.post('/research/start', payload)
