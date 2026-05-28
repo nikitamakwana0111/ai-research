@@ -3,7 +3,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 COPY ./pyproject.toml ./
-COPY ./backend ./backend
+COPY ./app ./app
 
 RUN pip install --no-cache-dir pip --upgrade \
     && pip install --no-cache-dir .
