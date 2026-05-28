@@ -1,0 +1,28 @@
+# Ignore local environment and generated files
+.git
+.gitignore
+README.md
+README.md.txt
+docker-compose.yml
+node_modules
+frontend/node_modules
+frontend/dist
+frontend/.git
+frontend/package-lock.json
+frontend/yarn.lock
+*.log
+*.tmp
+*.cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+venv
+ENV
+.env
+
+# Ignore IDE / editor files
+.vscode
+.idea
+.DS_Store
