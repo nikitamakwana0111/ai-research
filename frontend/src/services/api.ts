@@ -5,7 +5,14 @@ const STORAGE_KEY = 'apiBaseUrl'
 function getSavedApiBaseUrl(): string | null {
   if (typeof window === 'undefined') return null
   try {
-    return window.localStorage.getItem(STORAGE_KEY)
+    const item = window.localStorage.getItem(STORAGE_KEY)
+    if (!item) return null
+
+    try {
+      return JSON.parse(item) as string
+    } catch {
+      return item
+    }
   } catch {
     return null
   }
@@ -30,7 +37,7 @@ export function setApiBaseUrl(baseURL: string) {
   if (typeof window === 'undefined') return
 
   try {
-    window.localStorage.setItem(STORAGE_KEY, baseURL)
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(baseURL))
   } catch {
     // ignore storage write errors
   }
