@@ -53,4 +53,6 @@ export const chatQuery = (payload: { message: string; session_id?: string }) => 
 
 export const uploadDocument = (formData: FormData) => api.post('/documents/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 
+export const healthCheck = () => api.get('/health')
+
 export default api

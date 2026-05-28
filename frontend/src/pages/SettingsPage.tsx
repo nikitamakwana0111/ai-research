@@ -1,16 +1,27 @@
 import { useState } from 'react'
-import { setApiBaseUrl } from '../services/api'
+import { healthCheck, setApiBaseUrl } from '../services/api'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 
 function SettingsPage() {
   const [apiBase, setApiBase] = useLocalStorage('apiBaseUrl', import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1')
   const [message, setMessage] = useState('')
+  const [healthMessage, setHealthMessage] = useState('')
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setApiBase(apiBase)
     setApiBaseUrl(apiBase)
     setMessage('Backend URL saved. The app will use this value immediately. Reload if a page still shows the old backend.')
+  }
+
+  const handleTestBackend = async () => {
+    setHealthMessage('Checking backend...')
+    try {
+      const { data } = await healthCheck()
+      setHealthMessage(`Backend is reachable: ${data.status}`)
+    } catch (error) {
+      setHealthMessage('Backend health check failed. Verify the URL and Railway service status.')
+    }
   }
 
   return (
@@ -30,12 +41,22 @@ function SettingsPage() {
           />
         </div>
 
-        <button type="submit" className="inline-flex items-center justify-center rounded-3xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-700">
-          Save settings
-        </button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button type="submit" className="inline-flex items-center justify-center rounded-3xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-700">
+            Save settings
+          </button>
+          <button
+            type="button"
+            onClick={handleTestBackend}
+            className="inline-flex items-center justify-center rounded-3xl bg-sky-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-sky-700"
+          >
+            Test backend URL
+          </button>
+        </div>
       </form>
 
       {message && <p className="rounded-3xl bg-slate-50 p-4 text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">{message}</p>}
+      {healthMessage && <p className="rounded-3xl bg-slate-50 p-4 text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">{healthMessage}</p>}
     </section>
   )
 }
