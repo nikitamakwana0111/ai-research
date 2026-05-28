@@ -2,10 +2,20 @@ from pathlib import Path
 import json
 from typing import Any, Dict, List
 
-import faiss
 import numpy as np
 
 from app.services.rag.embeddings import EmbeddingsProvider
+
+
+def import_faiss() -> Any:
+    try:
+        import faiss
+    except ImportError as exc:
+        raise RuntimeError(
+            "faiss is required for document search, but it is not installed or failed to load. "
+            "Install faiss-cpu and restart the backend."
+        ) from exc
+    return faiss
 
 
 class VectorStore:
@@ -19,7 +29,8 @@ class VectorStore:
         self.index = self._load_or_create_index()
         self.metadata: List[Dict[str, Any]] = self._load_metadata()
 
-    def _load_or_create_index(self) -> faiss.IndexFlatL2:
+    def _load_or_create_index(self) -> Any:
+        faiss = import_faiss()
         if self.index_path.exists():
             try:
                 return faiss.read_index(str(self.index_path))
@@ -37,6 +48,7 @@ class VectorStore:
         return []
 
     def persist(self) -> None:
+        faiss = import_faiss()
         faiss.write_index(self.index, str(self.index_path))
         with self.metadata_path.open("w", encoding="utf-8") as metadata_file:
             json.dump(self.metadata, metadata_file, ensure_ascii=False, indent=2)
