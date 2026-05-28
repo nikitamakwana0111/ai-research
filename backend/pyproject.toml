@@ -7,17 +7,17 @@ authors = [
   { name = "AI Research Assistant", email = "dev@example.com" }
 ]
 requires-python = ">=3.11"
-
-[project.dependencies]
-fastapi = "^0.115.0"
-uvicorn = { extras = ["standard"], version = "^0.23.2" }
-python-dotenv = "^1.0.0"
-openai = "^1.0.0"
-pydantic = "^2.8.0"
-python-multipart = "^0.0.6"
-PyMuPDF = "^1.23.0"
-faiss-cpu = "^1.7.4"
-requests = "^2.31.0"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.23.2",
+    "python-dotenv>=1.0.0",
+    "openai>=1.0.0",
+    "pydantic>=2.8.0",
+    "python-multipart>=0.0.6",
+    "PyMuPDF>=1.23.0",
+    "faiss-cpu>=1.7.4",
+    "requests>=2.31.0"
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
