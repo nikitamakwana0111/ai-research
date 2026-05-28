@@ -33,8 +33,16 @@ function ResearchPage() {
       const { data } = await researchStart({ topic, enable_web_search: enableWebSearch, include_documents: includeDocuments })
       setResponse(data)
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data?.detail) {
-        setErrorMessage(error.response.data.detail)
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data?.detail) {
+          setErrorMessage(error.response.data.detail)
+        } else if (error.response) {
+          setErrorMessage(
+            `Backend returned ${error.response.status} ${error.response.statusText}. ${JSON.stringify(error.response.data)}`
+          )
+        } else {
+          setErrorMessage(`Network error: ${error.message}. Verify the backend URL and that the service is running.`)
+        }
       } else {
         setErrorMessage('Failed to start research workflow. Please check your backend configuration.')
       }
