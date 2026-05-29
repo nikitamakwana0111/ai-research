@@ -13,6 +13,7 @@ class SearchAgent(BaseAgent):
 
     async def run(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         topic = payload["topic"]
+
         prompt = (
             f"Research the topic: {topic}\n\n"
             "Provide:\n"
@@ -24,17 +25,27 @@ class SearchAgent(BaseAgent):
             "* Market direction\n"
             "* Future outlook"
         )
+
         output = await asyncio.to_thread(self._call_openai, prompt)
-        return {"output": output, "metadata": {"topic": topic, "model": settings.MODEL_NAME}}
+
+        return {
+            "output": output,
+            "metadata": {
+                "topic": topic,
+                "model": settings.MODEL_NAME,
+            },
+        }
 
     @staticmethod
     def _call_openai(prompt: str) -> str:
         if not settings.GROQ_API_KEY.strip():
-            raise AIServiceError("GROQ_API_KEY is missing. Add a valid key to backend/.env and restart the backend.")
+            raise AIServiceError(
+                "GROQ_API_KEY is missing. Add a valid key to backend/.env and restart the backend."
+            )
 
         client = OpenAI(
             api_key=settings.GROQ_API_KEY,
-            base_url=settings.GROQ_API_BASE
+            base_url=settings.GROQ_API_BASE,
         )
 
         try:
@@ -43,12 +54,14 @@ class SearchAgent(BaseAgent):
                 messages=[
                     {
                         "role": "user",
-                        "content": prompt
+                        "content": prompt,
                     }
-                ]
+                ],
             )
-        except Exception as exc:
-        print("GROQ ERROR:", str(exc))
-        raise
+
+        except OpenAIError as exc:
+            raise AIServiceError(
+                f"Search Agent Groq request failed: {exc}"
+            ) from exc
 
         return (response.choices[0].message.content or "").strip()
