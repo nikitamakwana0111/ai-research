@@ -47,7 +47,8 @@ class SearchAgent(BaseAgent):
                     }
                 ]
             )
-        except OpenAIError as exc:
-            raise AIServiceError(f"Search Agent Groq request failed: {exc}") from exc
+        except Exception as exc:
+        print("GROQ ERROR:", str(exc))
+        raise
 
         return (response.choices[0].message.content or "").strip()
