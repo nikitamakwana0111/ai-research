@@ -1,0 +1,29 @@
+[project]
+name = "multi-agent-ai-research-assistant-backend"
+version = "0.1.0"
+description = "FastAPI backend for the Multi-Agent AI Research Assistant with RAG and CrewAI workflow support."
+readme = "README.md"
+authors = [
+  { name = "AI Research Assistant", email = "dev@example.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.23.2",
+    "python-dotenv>=1.0.0",
+    "openai>=1.0.0",
+    "pydantic>=2.8.0",
+    "pydantic-settings>=2.1.0",
+    "python-multipart>=0.0.6",
+    "PyMuPDF>=1.23.0",
+    "faiss-cpu>=1.7.4",
+    "requests>=2.31.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"

@@ -29,7 +29,7 @@ class Settings(BaseSettings):
 
     max_pdf_pages: int = 50
     model_name: str = "llama-3.3-70b-versatile"
-    embeddings_model: str = "text-embedding-3-large"
+    embeddings_model: str = "local-hash-embedding"
 
     @property
     def MODEL_NAME(self) -> str:

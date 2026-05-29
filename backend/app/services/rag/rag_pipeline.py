@@ -7,7 +7,7 @@ from app.utils.openai_client import OpenAIClient
 
 class RAGPipeline:
     def __init__(self) -> None:
-        self.vector_store: Any | None = None
+        self.vector_store: Any | None = VectorStore(settings.vector_store_path)
         self.llm = OpenAIClient()
 
     def _ensure_vector_store(self) -> VectorStore:

@@ -36,3 +36,21 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 4. Open API docs at `http://localhost:8000/docs`
+
+## Railway Deployment
+
+This repository includes a root `railway.toml` and root `Dockerfile` for deploying only the backend service from the monorepo.
+
+1. Create a Railway service from this repository.
+2. Keep the Railway service root as the repository root so Railway can read `railway.toml`.
+3. Add these variables in Railway:
+
+```bash
+GROQ_API_KEY=your_groq_key
+GROQ_API_BASE=https://api.groq.com/openai/v1
+MODEL_NAME=llama-3.3-70b-versatile
+EMBEDDINGS_MODEL=local-hash-embedding
+ALLOWED_ORIGINS=https://your-frontend-domain.com
+```
+
+Railway injects `PORT` automatically. The backend start script binds Uvicorn to `0.0.0.0:${PORT}`, which is required for Railway public networking.
