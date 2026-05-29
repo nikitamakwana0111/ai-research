@@ -32,7 +32,20 @@ class Settings(BaseSettings):
     embeddings_model: str = "text-embedding-3-large"
 
     @property
+    def MODEL_NAME(self) -> str:
+        return self.model_name
+
+    @property
+    def GROQ_API_KEY(self) -> str:
+        return self.groq_api_key
+
+    @property
+    def GROQ_API_BASE(self) -> str:
+        return self.groq_api_base
+
+    @property
     def allowed_origins_list(self) -> List[str]:
         return [origin.strip() for origin in self.allowed_origins.split(",")]
+
 
 settings = Settings()
