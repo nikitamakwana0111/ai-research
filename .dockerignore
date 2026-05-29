@@ -10,6 +10,11 @@ frontend/dist
 frontend/.git
 frontend/package-lock.json
 frontend/yarn.lock
+frontend
+backend/.env
+backend/.pytest_cache
+backend/data
+backend/*.log
 *.log
 *.tmp
 *.cache

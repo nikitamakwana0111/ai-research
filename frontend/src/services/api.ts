@@ -53,6 +53,10 @@ export const chatQuery = (payload: { message: string; session_id?: string }) => 
 
 export const uploadDocument = (formData: FormData) => api.post('/documents/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 
-export const healthCheck = () => api.get('/health')
+export const healthCheck = () => {
+  const baseURL = String(api.defaults.baseURL || getApiBaseUrl()).replace(/\/+$/, '')
+  const healthURL = baseURL.endsWith('/api/v1') ? `${baseURL.slice(0, -'/api/v1'.length)}/health` : `${baseURL}/health`
+  return axios.get(healthURL, { timeout: 10000 })
+}
 
 export default api
